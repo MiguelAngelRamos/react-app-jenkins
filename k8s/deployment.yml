@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: react-app-deployment # Nombre unico para identificar el deployment en el cluster
+  labels:
+    app: react-frontend
+spec:
+  replicas: 2 # Estado deseado "Queremos 2 copias exactas de la app de react corriendo siempre"
+  # Como hace el deployment para saber cuales son sus pods a controlar
+  selector:
+    matchLabels:
+      app: react-frontend # Aqui el deployment define que pods debe controlar, buscara en cluster todos los pods que tengan esta etiqueta
+  # template es la plantilla para fabricar cada pod
+  template:
+    metadata:
+      labels:
+        # Etiqueta se le pegara a cada pod por este deployment
+        app: react-frontend
+    spec:
+      containers:
+        - name: react-app-container
+          image: mramoscli/react-app-frontdev:v1 # Imagen de docker que se va a usar para crear los pods
+          ports:
+            - containerPort: 80 # Puerto que expone el contenedor, no es el puerto del host, es el puerto interno del contenedor
